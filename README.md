@@ -4,8 +4,6 @@
 
 An unofficial plugin for MagTran M3 family devices.
 
-## OpenDeck version
-
 Requires OpenDeck 2.5.0 or newer
 
 ## Supported devices
@@ -37,8 +35,8 @@ Requires OpenDeck 2.5.0 or newer
 This plugin was developed using several existing device plugins as reference:
 - [opendeck-akp153](https://github.com/4ndv/opendeck-akp153) by 4ndv
 - [opendeck-m3](https://github.com/sakloui/opendeck-m3) by sakloui
-- [tacto-connect](https://github.com/RivulusLive/tacto-connect-source) by RivulusLive
-- [rust-elgato-streamdeck](https://github.com/OpenActionAPI/rust-elgato-streamdeck)
+- [tacto-connect](https://github.com/RivulusLive/tacto-connect-source) by nekename
+- [rust-elgato-streamdeck](https://github.com/OpenActionAPI/rust-elgato-streamdeck) by nekename
 
 ## License
 
