@@ -1,9 +1,6 @@
 use std::sync::Arc;
-
 use anyhow::Result;
-
 use crate::opendeck::SetImageEvent;
-
 use crate::m3::device_transport::DeviceTransport;
 
 mod background;
@@ -20,7 +17,7 @@ pub(crate) struct Display {
 impl Display {
     pub(crate) fn new(transport: Arc<DeviceTransport>) -> Self {
         let keys = Keys::new(transport.clone());
-        let background = Background::new(transport, keys.clone());
+        let background = Background::new(transport);
         Self { background, keys }
     }
 
@@ -35,7 +32,8 @@ impl Display {
         if evt.position.is_none()
             && let Some(image) = evt.image
         {
-            return self.background.apply(image).await;
+            self.background.apply(image).await?;
+            return self.keys.refresh().await;
         }
 
         if let Some(position) = evt.position {
@@ -55,10 +53,12 @@ impl Display {
     }
 
     pub(crate) async fn apply_background(&self, image: String) -> Result<()> {
-        self.background.apply(image).await
+        self.background.apply(image).await?;
+        self.keys.refresh().await
     }
 
     pub(crate) async fn clear_background(&self) -> Result<()> {
-        self.background.clear().await
+        self.background.clear().await?;
+        self.keys.refresh().await
     }
 }

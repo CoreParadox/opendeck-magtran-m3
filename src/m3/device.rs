@@ -9,7 +9,6 @@ use crate::opendeck::api;
 use tokio_util::sync::CancellationToken;
 
 use crate::{
-    core::state::{DEVICES, TOKENS},
     m3::{
         device_transport::DeviceTransport,
         display::Display,
@@ -17,6 +16,7 @@ use crate::{
         layout::{COL_COUNT, DEVICE_TYPE, ENCODER_COUNT, Kind, ROW_COUNT},
     },
     opendeck::{config, profile},
+    state::{DEVICES, TOKENS},
 };
 
 #[derive(Debug, Clone)]
@@ -38,7 +38,7 @@ impl Device {
     pub(crate) async fn run(discovered: DiscoveredDevice, token: CancellationToken) {
         log::info!("Running device task for {discovered:?}");
 
-        let device = match Self::open(&discovered).await {
+        let device = match Self::open(&discovered, token.clone()).await {
             Ok(device) => device,
             Err(err) => {
                 log::error!("Had error during device init for {discovered:?}: {err}");
@@ -54,18 +54,18 @@ impl Device {
         device.cleanup(false).await;
     }
 
-    pub(crate) async fn open(discovered: &DiscoveredDevice) -> Result<Arc<Self>> {
+    pub(crate) async fn open(discovered: &DiscoveredDevice, token: CancellationToken) -> Result<Arc<Self>> {
         let plugin_config = config::load_or_default().await;
-        let transport = Arc::new(DeviceTransport::open(&discovered.dev, discovered.kind.clone()).await?);
+        let transport = Arc::new(DeviceTransport::open(&discovered.dev, discovered.kind.clone(), token).await?);
 
         let inputs = Inputs::new(transport.clone());
         let display = Display::new(transport.clone());
 
-        // Init sequence found to work reliably for the M3.
+        // Init I found to work reliably, may not be necessary for all devices.
         transport.wake_screen().await?;
         transport.set_brightness(plugin_config.default_brightness).await?;
         display.clear_all_keys().await?;
-        if let Ok(fw) = transport.get_firmware_version().await {
+        if let Some(fw) = transport.firmware_version() {
             log::info!("M3 firmware version: {fw}");
         }
         transport.flush().await?;
@@ -151,20 +151,10 @@ impl Device {
 
     pub(crate) async fn cleanup(self: &Arc<Self>, deregister: bool) {
         log::info!("Shutting down device {}", self.id);
-
-        if deregister
-            && let Err(e) = api::unregister_device(self.id.clone()).await
-        {
-            log::error!("Failed to unregister device {}: {e}", self.id);
-        }
-
-        TOKENS.write().await.remove(&self.id);
-        DEVICES.write().await.remove(&self.id);
+        Self::cleanup_by_id(&self.id, deregister).await;
     }
 
     pub(crate) async fn cleanup_by_id(id: &str, deregister: bool) {
-        log::info!("Cleaning up device {id}");
-
         if deregister
             && let Err(e) = api::unregister_device(id.to_string()).await
         {

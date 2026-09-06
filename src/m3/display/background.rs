@@ -7,21 +7,15 @@ use crate::{
     utils::image_util::{ImageFormat, ImageMirroring, ImageMode, ImageRotation, decode_image_data_url},
 };
 
-use super::keys::Keys;
-
 pub(crate) struct Background {
     transport: Arc<DeviceTransport>,
-    keys: Keys,
 }
 
 impl Background {
-    pub(crate) fn new(transport: Arc<DeviceTransport>, keys: Keys) -> Self {
-        Self { transport, keys }
+    pub(crate) fn new(transport: Arc<DeviceTransport>) -> Self {
+        Self { transport }
     }
 
-    /// Possibly some improvement to be made here... BUT for now: always draw the background and keys unconditionally since
-    /// we can't know the state of the screen on connect e.g. it may have just powered on, or replugged.
-    /// On the other hand, it's just genrally nice to treat the device the same in all cases when possible!
     pub(crate) async fn apply(&self, image: String) -> Result<()> {
         log::info!("apply_background: {} bytes", image.len());
 
@@ -37,8 +31,6 @@ impl Background {
         };
 
         self.transport.set_background_region(self.image_format(), &decoded, 0, 0, 0).await?;
-
-        self.keys.refresh().await?;
         log::info!("Background image sent to device");
         Ok(())
     }
@@ -47,7 +39,6 @@ impl Background {
         log::info!("clear_background");
 
         self.transport.clear_background_region(0).await?;
-        self.keys.refresh().await?;
         log::info!("Background cleared");
 
         Ok(())

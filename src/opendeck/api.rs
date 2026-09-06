@@ -1,9 +1,5 @@
-/// Facade over the OpenAction device-plugin outbound API.
-///
-/// These thin wrappers forward to `openaction::device_plugin`, which uses the
-/// outbound WebSocket manager installed by `openaction::run`. Keeping this
-/// indirection lets us swap the implementation if we ever move off the
-/// `openaction` crate without touching the rest of the codebase.
+/// Facade over the OpenAction device-plugin outbound API. I initially implemented this because the OpenAction crate
+/// didn't expose the settings API directly, but instead I just forked it to resolve that problem, so this is probably unnecessary.
 pub async fn register_device(
     id: String,
     name: String,

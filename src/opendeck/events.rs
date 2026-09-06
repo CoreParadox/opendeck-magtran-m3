@@ -1,6 +1,6 @@
 use crate::{
-    core::state::DEVICES,
     opendeck::{SetBrightnessEvent, SetImageEvent, profile},
+    state::DEVICES,
 };
 
 pub(crate) async fn handle_set_image(event: SetImageEvent) {

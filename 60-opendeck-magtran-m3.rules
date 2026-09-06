@@ -1,0 +1,3 @@
+# ActionRing MagTran M3 (VID: 5548, PID: 1038)
+SUBSYSTEM=="usb", ATTRS{idVendor}=="5548", ATTRS{idProduct}=="1038", MODE="0660", TAG+="uaccess"
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="5548", ATTRS{idProduct}=="1038", MODE="0660", TAG+="uaccess"

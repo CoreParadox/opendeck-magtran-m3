@@ -2,7 +2,7 @@ use std::{collections::HashMap, path::PathBuf, sync::Arc, sync::LazyLock};
 
 use tokio::sync::{Mutex, RwLock};
 
-use crate::{core::state::DEVICES, m3::device::Device, opendeck::config};
+use crate::{m3::device::Device, opendeck::config, state::DEVICES};
 
 static CURRENT: LazyLock<RwLock<HashMap<String, String>>> = LazyLock::new(|| RwLock::new(HashMap::new()));
 static LAST: LazyLock<Mutex<Option<String>>> = LazyLock::new(|| Mutex::new(None));

@@ -3,7 +3,7 @@ name = "opendeck-m3"
 version = "0.2.0"
 edition = "2024"
 authors = ["CoreParadox"]
-repository = "https://github.com/CoreParadox/opendeck-m3"
+repository = "https://github.com/CoreParadox/opendeck-magtran-m3"
 
 [dependencies]
 anyhow = "1.0.104"
@@ -14,7 +14,6 @@ dirs = "6.0"
 eframe = "0.31"
 futures-lite = "2.6.0"
 image = { version = "0.25.6", default-features = false, features = ["jpeg", "png"] }
-libloading = "0.8.9"
 log = "0.4.27"
 mirajazz = "0.16.2"
 openaction = { git = "https://github.com/CoreParadox/open-action-api-rust", branch = "settings-interface-event" }
@@ -25,6 +24,3 @@ simplelog = "0.12.2"
 tokio = { version = "1.44.2", features = ["fs", "io-util", "macros", "net", "rt-multi-thread", "signal", "sync", "time"] }
 tokio-util = { version = "0.7.15", features = ["rt"] }
 
-
-[build-dependencies]
-bindgen = "0.71.1"

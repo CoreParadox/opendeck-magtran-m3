@@ -2,6 +2,7 @@ use crate::opendeck::config;
 
 mod app;
 mod ipc;
+mod state;
 mod thumbnails;
 
 /// Opens the settings window, spawning it as a child process if one isn't already running.

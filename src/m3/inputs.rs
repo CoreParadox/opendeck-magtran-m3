@@ -12,7 +12,7 @@ use crate::m3::{
 
 pub(crate) mod buttons;
 pub(crate) mod encoders;
-
+pub(crate) mod input_reader;
 pub(crate) use buttons::Buttons;
 pub(crate) use encoders::Encoders;
 

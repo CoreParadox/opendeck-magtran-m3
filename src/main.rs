@@ -1,6 +1,6 @@
-mod core;
 mod m3;
 mod opendeck;
+mod state;
 mod utils;
 
 use anyhow::Result;
@@ -73,7 +73,7 @@ fn main() -> Result<()> {
         if let Err(err) = result {
             log::error!("M3 plugin terminated with error: {err:#}");
         }
-        core::state::shutdown().await;
+        crate::state::shutdown().await;
     });
     Ok(())
 }
@@ -92,19 +92,18 @@ async fn wait_for_sigterm() -> Result<()> {
 }
 
 async fn run_plugin() -> Result<()> {
-    let handler: &'static dyn GlobalEventHandler = &GLOBAL_HANDLER;
-    set_global_event_handler(handler);
+    set_global_event_handler(&GLOBAL_HANDLER);
     openaction::run(std::env::args().collect()).await.map_err(anyhow::Error::from)
 }
 
 async fn start_lifecycle() {
     let token = tokio_util::sync::CancellationToken::new();
-    let tracker = core::state::TRACKER.lock().await.clone();
+    let tracker = crate::state::TRACKER.lock().await.clone();
     let lifecycle_token = token.clone();
     tracker.spawn(async move {
         if let Err(e) = m3::device_lifecycle::run(lifecycle_token).await {
             log::error!("Device lifecycle manager exited with error: {e:#}");
         }
     });
-    core::state::TOKENS.write().await.insert("_lifecycle".to_string(), token);
+    crate::state::TOKENS.write().await.insert("_lifecycle".to_string(), token);
 }

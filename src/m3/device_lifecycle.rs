@@ -5,14 +5,12 @@ use mirajazz::{
 };
 use tokio_util::{sync::CancellationToken, task::TaskTracker};
 
-use crate::opendeck::api;
-
 use crate::{
-    core::state::{DEVICES, TOKENS, TRACKER},
     m3::{
         device::{Device, DiscoveredDevice},
         layout::{DEVICE_NAMESPACE, Kind, QUERIES},
     },
+    state::{TOKENS, TRACKER},
 };
 
 fn device_id_from_info(dev: &HidDeviceInfo) -> Option<String> {
@@ -102,11 +100,6 @@ async fn on_disconnected(info: HidDeviceInfo) {
         return;
     };
 
-    DEVICES.write().await.remove(&id);
-
-    if let Err(e) = api::unregister_device(id.clone()).await {
-        log::error!("Failed to unregister device {id}: {e}");
-    }
-
+    Device::cleanup_by_id(&id, true).await;
     log::info!("Disconnected device {id}");
 }
