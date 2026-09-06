@@ -1,0 +1,18 @@
+{
+  "Name": "MagTran M3 (VSD / ActionRing)",
+  "Description": "Device support plugin for the MagTran M3 family: VSD Inside (5548:1020) and ActionRing (5548:1038). Based off the M18 plugin by ibanks42.",
+  "Author": "isaklou",
+  "Version": "0.2.0",
+  "PluginUUID": "com.coreparadox.opendeck.magtran-m3",
+  "CodePathLin": "opendeck-m3-linux",
+  "CodePathMac": "opendeck-m3-mac",
+  "CodePathWin": "opendeck-m3-win.exe",
+  "Icon": "assets/icon",
+  "Category": "Hardware",
+  "HasSettingsInterface": true,
+  "OS": [
+    { "Platform": "linux" }
+  ],
+  "Actions": [],
+  "DeviceNamespace": "MagTran-ActionRing-M3"
+}

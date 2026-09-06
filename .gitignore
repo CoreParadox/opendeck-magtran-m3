@@ -1,0 +1,12 @@
+target/
+/build
+*.so
+*.dylib
+*.dll
+*.o
+/libtransport*
+/vendor
+*.log
+/settings.json
+/active_profile
+.vscode/
