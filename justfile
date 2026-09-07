@@ -14,11 +14,12 @@ clean:
     rm -rf build
 
 copy-assets:
+    rm -rf build/{{id}}
     mkdir -p build/{{id}}
     cp -r assets build/{{id}}
     cp manifest.json build/{{id}}
-    cp target/plugin-linux/x86_64-unknown-linux-gnu/release/opendeck-m3 build/{{id}}/opendeck-m3-linux
+    cp target/plugin-linux/x86_64-unknown-linux-gnu/release/opendeck-magtran-m3 build/{{id}}/com.coreparadox.opendeck.magtran-m3-linux
 
 [working-directory: "build"]
 package:
-    zip -r opendeck-m3.plugin.zip {{id}}/
+    zip -r com.coreparadox.opendeck.magtran-m3.zip {{id}}/

@@ -34,7 +34,7 @@ pub(crate) fn spawn_settings_window() -> anyhow::Result<()> {
 }
 
 fn bind_settings_socket() -> anyhow::Result<(tokio::net::UnixListener, PathBuf)> {
-    let socket_path = std::env::temp_dir().join(format!("opendeck-m3-settings-{}.sock", std::process::id()));
+    let socket_path = std::env::temp_dir().join(format!("com.coreparadox.opendeck.magtran-m3-settings-{}.sock", std::process::id()));
     let _ = std::fs::remove_file(&socket_path);
 
     let std_listener = std::os::unix::net::UnixListener::bind(&socket_path)?;

@@ -1,6 +1,6 @@
 [package]
-name = "opendeck-m3"
-version = "0.2.0"
+name = "opendeck-magtran-m3"
+version = "1.0.0"
 edition = "2024"
 authors = ["CoreParadox"]
 repository = "https://github.com/CoreParadox/opendeck-magtran-m3"

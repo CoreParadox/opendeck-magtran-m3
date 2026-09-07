@@ -45,11 +45,11 @@ impl GlobalEventHandler for GlobalHandler {
 }
 
 fn init_logging() {
-    let log_path = opendeck::config::plugin_dir().join("opendeck-m3.log");
+    let log_path = opendeck::config::plugin_dir().join("com.coreparadox.opendeck.magtran-m3.log");
     let log_file: Box<dyn std::io::Write + Send + 'static> =
         Box::new(std::io::LineWriter::new(std::fs::OpenOptions::new().create(true).append(true).open(log_path).unwrap()));
 
-    let cfg = simplelog::ConfigBuilder::new().add_filter_allow_str("opendeck_m3").add_filter_allow_str("mirajazz").build();
+    let cfg = simplelog::ConfigBuilder::new().add_filter_allow_str("opendeck").add_filter_allow_str("mirajazz").build();
 
     simplelog::CombinedLogger::init(vec![
         simplelog::TermLogger::new(simplelog::LevelFilter::Info, cfg.clone(), simplelog::TerminalMode::Stdout, simplelog::ColorChoice::Never),

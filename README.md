@@ -23,7 +23,7 @@ Requires OpenDeck 2.5.0 or newer
 
 ## Installation
 
-1. Download [The latest release](https://github.com/CoreParadox/opendeck-m3/releases)
+1. Download [The latest release](https://github.com/CoreParadox/opendeck-magtran-m3/releases)
 2. In OpenDeck: Plugins -> Install from file
 3. Linux: install the [udev rules](./60-opendeck-magtran-m3.rules)
     - (Copy into `/etc/udev/rules.d/` and run `sudo udevadm control --reload-rules`)
