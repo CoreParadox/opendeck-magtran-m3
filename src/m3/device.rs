@@ -151,6 +151,11 @@ impl Device {
 
     pub(crate) async fn cleanup(self: &Arc<Self>, deregister: bool) {
         log::info!("Shutting down device {}", self.id);
+
+        if let Err(e) = self.transport.shutdown().await {
+            log::error!("Failed to shut down device {}: {e}", self.id);
+        }
+
         Self::cleanup_by_id(&self.id, deregister).await;
     }
 

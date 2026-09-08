@@ -67,6 +67,10 @@ impl DeviceTransport {
         self.mirajazz.heartbeat().await
     }
 
+    pub(crate) async fn shutdown(&self) -> Result<()> {
+        self.mirajazz.shutdown().await
+    }
+
     pub(crate) fn firmware_version(&self) -> Option<String> {
         self.mirajazz.firmware_version().map(str::to_string)
     }

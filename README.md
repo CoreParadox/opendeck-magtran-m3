@@ -17,9 +17,9 @@ Requires OpenDeck 2.5.0 or newer
 
 ## Platform support
 
-- Linux: Supported
-- Mac: Probably works?
-- Windows: Not Supported (Settings IPC uses Unix sockets, so would need to use something like named pipes on Windows)
+- Linux: Supported and tested
+- Mac: Untested
+- Windows: Untested
 
 ## Installation
 

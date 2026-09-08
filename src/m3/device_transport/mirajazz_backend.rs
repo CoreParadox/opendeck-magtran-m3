@@ -82,6 +82,10 @@ impl MirajazzBackend {
         self.device.keep_alive().await.map_err(|e| anyhow!("{e}"))
     }
 
+    pub(crate) async fn shutdown(&self) -> Result<()> {
+        self.device.shutdown().await.map_err(|e| anyhow!("{e}"))
+    }
+
     // The background layer (BGPIC/BGCLE) isn't implemented via mirajazz
     // I captured the wire format while using the vendor sdk with a write interceptor
 

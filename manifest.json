@@ -2,14 +2,18 @@
   "Name": "MagTran M3",
   "Description": "Device support plugin for the MagTran M3 family.",
   "Author": "CoreParadox",
-  "Version": "1.0.0",
+  "Version": "1.0.1",
   "PluginUUID": "com.coreparadox.opendeck.magtran-m3",
   "CodePathLin": "com.coreparadox.opendeck.magtran-m3-linux",
+  "CodePathMac": "com.coreparadox.opendeck.magtran-m3-mac",
+  "CodePathWin": "com.coreparadox.opendeck.magtran-m3-win.exe",
   "Icon": "assets/icon",
   "Category": "Hardware",
   "HasSettingsInterface": true,
   "OS": [
-    { "Platform": "linux" }
+    { "Platform": "linux" },
+    { "Platform": "mac" },
+    { "Platform": "windows" }
   ],
   "Actions": [],
   "DeviceNamespace": "M3"

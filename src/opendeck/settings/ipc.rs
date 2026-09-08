@@ -1,4 +1,4 @@
-use std::{io::Write, os::unix::net::UnixStream, path::PathBuf, process::Child, sync::LazyLock, sync::Mutex};
+use std::{io::Write, net::TcpStream, process::Child, sync::LazyLock, sync::Mutex};
 
 use tokio::io::AsyncBufReadExt;
 
@@ -22,28 +22,29 @@ pub(crate) fn spawn_settings_window() -> anyhow::Result<()> {
     }
     *child_guard = None;
 
-    let (listener, socket_path) = bind_settings_socket()?;
+    let (listener, addr) = bind_settings_socket()?;
 
     let exe = std::env::current_exe()?;
-    let child = std::process::Command::new(&exe).env("OPENDECK_M3_SETTINGS_SOCKET", &socket_path).spawn()?;
+    let child = std::process::Command::new(&exe)
+        .env("OPENDECK_M3_SETTINGS_ADDR", &addr)
+        .spawn()?;
     *child_guard = Some(child);
 
-    start_settings_listener(listener, socket_path);
+    start_settings_listener(listener, addr);
 
     Ok(())
 }
 
-fn bind_settings_socket() -> anyhow::Result<(tokio::net::UnixListener, PathBuf)> {
-    let socket_path = std::env::temp_dir().join(format!("com.coreparadox.opendeck.magtran-m3-settings-{}.sock", std::process::id()));
-    let _ = std::fs::remove_file(&socket_path);
+fn bind_settings_socket() -> anyhow::Result<(tokio::net::TcpListener, String)> {
+    let std_listener = std::net::TcpListener::bind("127.0.0.1:0")?;
+    let addr = std_listener.local_addr()?;
+    std_listener.set_nonblocking(true)?;
+    let listener = tokio::net::TcpListener::from_std(std_listener)?;
 
-    let std_listener = std::os::unix::net::UnixListener::bind(&socket_path)?;
-    let listener = tokio::net::UnixListener::from_std(std_listener)?;
-
-    Ok((listener, socket_path))
+    Ok((listener, addr.to_string()))
 }
 
-fn start_settings_listener(listener: tokio::net::UnixListener, socket_path: PathBuf) {
+fn start_settings_listener(listener: tokio::net::TcpListener, _addr: String) {
     tokio::spawn(async move {
         if let Ok((stream, _)) = listener.accept().await {
             let mut reader = tokio::io::BufReader::new(stream);
@@ -60,7 +61,6 @@ fn start_settings_listener(listener: tokio::net::UnixListener, socket_path: Path
                 line.clear();
             }
         }
-        let _ = tokio::fs::remove_file(&socket_path).await;
     });
 }
 
@@ -72,14 +72,14 @@ async fn apply_command(cmd: Command) -> anyhow::Result<()> {
 }
 
 /// Connects to the plugin's IPC socket. Called from the settings window child process.
-pub(crate) fn connect() -> anyhow::Result<UnixStream> {
-    let socket_path = std::env::var("OPENDECK_M3_SETTINGS_SOCKET")?;
-    let stream = UnixStream::connect(socket_path)?;
+pub(crate) fn connect() -> anyhow::Result<TcpStream> {
+    let addr = std::env::var("OPENDECK_M3_SETTINGS_ADDR")?;
+    let stream = TcpStream::connect(addr)?;
     stream.set_nonblocking(false).ok();
     Ok(stream)
 }
 
-pub(crate) fn send_command(stream: &mut UnixStream, cmd: Command) {
+pub(crate) fn send_command(stream: &mut TcpStream, cmd: Command) {
     if let Ok(json) = serde_json::to_string(&cmd) {
         let _ = writeln!(stream, "{json}");
         let _ = stream.flush();

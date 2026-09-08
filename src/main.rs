@@ -1,3 +1,5 @@
+#![cfg_attr(windows, windows_subsystem = "windows")]
+
 mod m3;
 mod opendeck;
 mod state;
@@ -59,7 +61,7 @@ fn init_logging() {
 }
 
 fn main() -> Result<()> {
-    if std::env::var("OPENDECK_M3_SETTINGS_SOCKET").is_ok() {
+    if std::env::var("OPENDECK_M3_SETTINGS_ADDR").is_ok() {
         init_logging();
         return opendeck::settings::run();
     }
