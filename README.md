@@ -19,7 +19,7 @@ Requires OpenDeck 2.5.0 or newer
 
 - Linux: Supported and tested
 - Mac: Untested
-- Windows: Untested
+- Windows: Supported and tested
 
 ## Installation
 
